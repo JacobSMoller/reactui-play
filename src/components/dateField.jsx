@@ -7,7 +7,8 @@ import {
 } from "@material-ui/pickers";
 
 function DateField(props) {
-  const [selectedDate, handleDateChange] = useState(new Date());
+  const apiDate = props.value ? new Date(props.value) : new Date();
+  const [selectedDate, handleDateChange] = useState(apiDate);
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <KeyboardDatePicker

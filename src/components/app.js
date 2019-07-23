@@ -8,7 +8,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       step: 0,
-      values: { order_date: "2017-01-01" }
+      values: {}
     };
   }
 

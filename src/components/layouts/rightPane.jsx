@@ -118,6 +118,7 @@ class RightPane extends React.Component {
             styles={styles}
             disabled={false}
             onDateInput={this.props.onDateInput}
+            value={value}
           />
         );
       } else if (type === "Amount") {
