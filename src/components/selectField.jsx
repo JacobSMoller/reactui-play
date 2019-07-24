@@ -9,7 +9,6 @@ const styles = {
 };
 
 function SelectField(props) {
-  console.log(props.value);
   return (
     <TextField
       style={styles.TextField}

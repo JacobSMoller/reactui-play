@@ -8,6 +8,8 @@ const styles = {
 };
 
 function StringField(props) {
+  const errorText = props.errorText;
+  const error = errorText ? true : false;
   return (
     <TextField
       style={styles.TextField}
@@ -20,7 +22,10 @@ function StringField(props) {
       variant="outlined"
       fullWidth
       onChange={props.onChange}
+      onBlur={props.onBlur}
       name={props.label}
+      helperText={errorText}
+      error={error}
     />
   );
 }

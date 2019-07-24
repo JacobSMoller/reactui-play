@@ -29,7 +29,7 @@ const fieldsToRender = {
     credit_card_last_four: { type: "Text", placeholder: "4 digits (eg.: 1234)" }
   },
   Invoice: {
-    supplier_corporate_id: { type: "Text", placeholder: "VAT/ORG/MVA  number" },
+    supplier_corporate_id: { type: "Text", placeholder: "VAT/ORG/MVA number" },
     total_incl_vat: { type: "Amount", placeholder: "Amount(format: 100.00)" },
     total_vat: { type: "Amount", placeholder: "Amount(format: 100.00)" },
     total_excl_vat: { type: "Amount", placeholder: "Amount(format: 100.00)" },
@@ -64,7 +64,7 @@ const countryFieldsToRender = {
     ocr_line_no_payment_id: { type: "Text", placeholder: "Free input" }
   },
   FI: {
-    ocr_line_no_payment_id: { type: "Text", placeholder: "Free input" }
+    ocr_line_fi_payment_id: { type: "Text", placeholder: "Free input" }
   }
 };
 
@@ -73,29 +73,33 @@ class RightPane extends React.Component {
     let textFields = [];
     const document_type = this.props.values.document_type;
     const country_code = this.props.values.supplier_country_code;
+
     // Document type field is always present.
     textFields.push(
       <SelectField
         key="document_type"
         styles={styles}
         label="document_type"
-        value={document_type}
+        value={document_type ? document_type : ""}
         onChange={this.props.onInput}
         docTypes={document_types}
       />
     );
+
     // Country code field is always present.
     textFields.push(
       <StringField
         key="supplier_country_code"
         styles={styles}
         label="supplier_country_code"
-        value={country_code}
+        value={country_code ? country_code : ""}
         onChange={this.props.onInput}
+        onBlur={this.props.onBlur}
         placeholder="Format (alpha 2 country code eg.: DK)"
+        errorText={this.props.errormsgs["supplier_country_code"]}
       />
     );
-    console.log(textFields);
+
     let docFields = fieldsToRender[document_type];
     // If we have a 2 digit country code merge potential country specific fields
     // to the list of fields we should show.
@@ -110,6 +114,7 @@ class RightPane extends React.Component {
     for (let key in docFields) {
       const type = docFields[key]["type"];
       const value = this.props.values[key];
+      const errorText = this.props.errormsgs[key];
       if (type === "Date") {
         textFields.push(
           <DateField
@@ -129,7 +134,9 @@ class RightPane extends React.Component {
             label={key}
             value={value}
             onChange={this.props.onInput}
+            onBlur={this.props.onBlur}
             placeholder={docFields[key]["placeholder"]}
+            errorText={errorText}
           />
         );
       } else {
@@ -140,15 +147,20 @@ class RightPane extends React.Component {
             label={key}
             value={value}
             onChange={this.props.onInput}
+            onBlur={this.props.onBlur}
             placeholder={docFields[key]["placeholder"]}
+            errorText={errorText}
           />
         );
       }
     }
     return textFields;
   }
+
   render() {
+    console.log(this.props.values);
     const textFields = this.renderTextFields(this.props.values);
+
     return (
       <Paper style={this.props.styles.Paper}>
         <form onSubmit={this.props.onSubmit}>

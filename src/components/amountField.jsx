@@ -8,6 +8,8 @@ const styles = {
 };
 
 function AmountField(props) {
+  const errorText = props.errorText;
+  const error = errorText ? true : false;
   return (
     <TextField
       style={styles.TextField}
@@ -21,8 +23,12 @@ function AmountField(props) {
       margin="normal"
       variant="outlined"
       onChange={props.onChange}
+      onBlur={props.onBlur}
       name={props.label}
       fullWidth
+      helperText={errorText}
+      error={error}
+      type="number"
     />
   );
 }

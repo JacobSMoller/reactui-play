@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import DateFnsUtils from "@date-io/date-fns"; // choose your lib
-import { format } from "date-fns";
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider
@@ -22,7 +21,7 @@ function DateField(props) {
         InputAdornmentProps={{ position: "start" }}
         onChange={date => {
           handleDateChange(date);
-          props.onDateInput(format(date, "yyyy/MM/dd"), props.label);
+          props.onDateInput(date, props.label);
         }}
         value={selectedDate}
         margin="normal"
