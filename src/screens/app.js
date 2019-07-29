@@ -10,6 +10,7 @@ import LeftPane from "../components/layouts/leftPane";
 import RightPane from "../components/layouts/rightPane";
 import QueryForm from "../components/layouts/queryForm";
 import { format, isValid as dateIsValid } from "date-fns";
+import axios from "axios";
 
 const styles = {
   Paper: {
@@ -79,19 +80,33 @@ class App extends React.Component {
 
   handleQuerySubmit = event => {
     event.preventDefault();
+    axios
+      .post("https://c488c22d.ngrok.io", {
+        limit: this.state.QueryLimit,
+        country_code: this.state.QueryCountry
+      })
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          apiResponse: res.data
+        });
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
     console.log(this.state);
 
     // TODO call flask api that handles storage and bigquery.
     this.setState({
       apiResponse: [
-        {
-          imgUri:
-            "https://github.com/e-conomic/ssn-distributable/blob/master/photos/1bffaa1c581fe8780f2177d0e3b1742c-image.jpg?raw=true"
-        },
-        {
-          imgUri:
-            "https://github.com/e-conomic/ssn-distributable/blob/master/photos/4092d1e58b4134a8effcc746e47e5221-image.png?raw=true"
-        }
+        // {
+        //   imgUri:
+        //     "https://github.com/e-conomic/ssn-distributable/blob/master/photos/1bffaa1c581fe8780f2177d0e3b1742c-image.jpg?raw=true"
+        // },
+        // {
+        //   imgUri:
+        //     "https://github.com/e-conomic/ssn-distributable/blob/master/photos/4092d1e58b4134a8effcc746e47e5221-image.png?raw=true"
+        // }
       ]
     });
   };
