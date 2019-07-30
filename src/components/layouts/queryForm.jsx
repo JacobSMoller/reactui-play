@@ -40,18 +40,7 @@ export default function QueryForm(props) {
             margin="normal"
             required
             fullWidth
-            label="Limit"
-            name="QueryLimit"
-            type="Number"
-            placeholder="Number of documents to annotate"
-            onInput={props.onInput}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="QueryCountry"
+            name="queryCountry"
             label="Country"
             placeholder="Country code (eg.: DK)"
             onInput={props.onInput}

@@ -24,26 +24,23 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: 0,
       values: { document_type: "" },
       errormsgs: {},
-      QueryLimit: 0,
-      QueryCountry: "",
-      apiResponse: []
+      queryLimit: 0,
+      queryCountry: "",
+      queried: false
     };
   }
 
   handleSubmit = event => {
     event.preventDefault();
-    let step = this.state.step;
-    step++;
-    this.setState({ values: {}, step: step });
-    console.log(this.state);
+    // Send values to put endpoint.
   };
 
   handleInput = event => {
     const { value } = event.target;
     const { name } = event.target;
+    console.log(name);
     const values = { ...this.state.values };
     const errormsgs = { ...this.state.errormsgs };
     values[name] = value;
@@ -81,34 +78,19 @@ class App extends React.Component {
   handleQuerySubmit = event => {
     event.preventDefault();
     axios
-      .post("https://c488c22d.ngrok.io", {
-        limit: this.state.QueryLimit,
-        country_code: this.state.QueryCountry
+      .post("https://60c29fbf.ngrok.io/get/document", {
+        country_code: this.state.queryCountry
       })
       .then(res => {
-        console.log(res.data);
+        console.log(res.data.img_url);
         this.setState({
-          apiResponse: res.data
+          queried: true,
+          imgUrl: res.data.img_url
         });
       })
       .catch(error => {
         console.log(error.response);
       });
-    console.log(this.state);
-
-    // TODO call flask api that handles storage and bigquery.
-    this.setState({
-      apiResponse: [
-        // {
-        //   imgUri:
-        //     "https://github.com/e-conomic/ssn-distributable/blob/master/photos/1bffaa1c581fe8780f2177d0e3b1742c-image.jpg?raw=true"
-        // },
-        // {
-        //   imgUri:
-        //     "https://github.com/e-conomic/ssn-distributable/blob/master/photos/4092d1e58b4134a8effcc746e47e5221-image.png?raw=true"
-        // }
-      ]
-    });
   };
 
   handleQueryInput = event => {
@@ -120,7 +102,7 @@ class App extends React.Component {
   };
 
   render() {
-    if (this.state.apiResponse.length === 0) {
+    if (!this.state.queried) {
       return (
         <React.Fragment>
           <Header />
@@ -136,10 +118,7 @@ class App extends React.Component {
         <Header />
         <Grid container spacing={2}>
           <Grid item sm={8}>
-            <LeftPane
-              styles={styles}
-              imgUri={this.state.apiResponse[this.state.step]["imgUri"]}
-            />
+            <LeftPane styles={styles} imgUri={this.state.imgUrl} />
           </Grid>
           <Grid item sm>
             <RightPane
