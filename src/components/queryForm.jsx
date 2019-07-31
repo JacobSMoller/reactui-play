@@ -4,6 +4,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -55,7 +56,9 @@ export default function QueryForm(props) {
             color="primary"
             className={classes.submit}
             size="large"
+            disabled={props.loading}
           >
+            {props.loading && <CircularProgress color="inherit" size={20} />}
             Query
           </Button>
         </form>

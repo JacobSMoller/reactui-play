@@ -14,6 +14,16 @@ function ReceiptForm(props) {
         errormsgs={props.errormsgs}
       />
       <StringField
+        key="payment_method"
+        styles={props.styles}
+        label="payment_method"
+        value={props.values.payment_method}
+        onChange={props.onInput}
+        onBlur={props.onBlur}
+        placeholder="CreditCard or Cash"
+        errorText={props.errormsgs.payment_method}
+      />
+      <StringField
         key="credit_card_last_four"
         styles={props.styles}
         label="credit_card_last_four"

@@ -47,16 +47,6 @@ function BaseForm(props) {
         errorText={props.errormsgs.total_excl_vat}
       />
       <StringField
-        key="payment_method"
-        styles={props.styles}
-        label="payment_method"
-        value={props.values.payment_method}
-        onChange={props.onInput}
-        onBlur={props.onBlur}
-        placeholder="CreditCard or Cash"
-        errorText={props.errormsgs.payment_method}
-      />
-      <StringField
         key="currency"
         styles={props.styles}
         label="currency"

@@ -8,7 +8,7 @@ import {
 import Grid from "@material-ui/core/Grid";
 import LeftPane from "../components/layouts/leftPane";
 import RightPane from "../components/layouts/rightPane";
-import QueryForm from "../components/layouts/queryForm";
+import QueryForm from "../components/queryForm";
 import { format, isValid as dateIsValid } from "date-fns";
 import axios from "axios";
 
@@ -24,23 +24,54 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      values: { document_type: "" },
+      values: {},
       errormsgs: {},
-      queryLimit: 0,
       queryCountry: "",
-      queried: false
+      queried: false,
+      loading: false,
+      numPages: 0,
+      currentPdfPage: 1
     };
   }
-
+  // Used by the submit form button in rightpane.
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ loading: true });
     // Send values to put endpoint.
+    this.setState({ loading: false });
   };
 
+  // Used by the skip button in rightpane.
+  handleSkip = () => {
+    this.setState({
+      values: {},
+      errormsgs: {},
+      loading: true
+    });
+    axios
+      .get("https://ac220a74.ngrok.io/documents", {
+        params: {
+          "country-code": this.state.queryCountry
+        }
+      })
+      .then(res => {
+        this.setState({
+          imgBytes: res.data.image_bytes,
+          imgFormat: res.data.image_format,
+          imgUrl: res.data.image_url,
+          values: res.data.values,
+          loading: false
+        });
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
+  };
+
+  // Used on all input fields to set state
   handleInput = event => {
     const { value } = event.target;
     const { name } = event.target;
-    console.log(name);
     const values = { ...this.state.values };
     const errormsgs = { ...this.state.errormsgs };
     values[name] = value;
@@ -51,6 +82,7 @@ class App extends React.Component {
     this.setState({ values: values, errormsgs: errormsgs });
   };
 
+  // Used on rightpane input fields to validate content when blurred.
   handleBlur = event => {
     const { name } = event.target;
     const valid = validateField(this.state.values[name], name);
@@ -67,6 +99,7 @@ class App extends React.Component {
     this.setState({ errormsgs: errormsgs });
   };
 
+  // Used on date selectors to correctly set date in state.
   handleDateInput = (date, field) => {
     if (dateIsValid(date)) {
       const values = { ...this.state.values };
@@ -75,17 +108,24 @@ class App extends React.Component {
     }
   };
 
+  // Used on first view to select a country to annotate documents for.
   handleQuerySubmit = event => {
     event.preventDefault();
+    this.setState({ loading: true });
     axios
-      .post("https://60c29fbf.ngrok.io/get/document", {
-        country_code: this.state.queryCountry
+      .get("https://ac220a74.ngrok.io/documents", {
+        params: {
+          "country-code": this.state.queryCountry
+        }
       })
       .then(res => {
-        console.log(res.data.img_url);
         this.setState({
           queried: true,
-          imgUrl: res.data.img_url
+          imgBytes: res.data.image_bytes,
+          imgFormat: res.data.image_format,
+          imgUrl: res.data.image_url,
+          values: res.data.values,
+          loading: false
         });
       })
       .catch(error => {
@@ -93,12 +133,26 @@ class App extends React.Component {
       });
   };
 
+  // Used on select country field to set state.
   handleQueryInput = event => {
     const { value } = event.target;
     const { name } = event.target;
     const currentState = { ...this.state };
     currentState[name] = value;
     this.setState(currentState);
+  };
+
+  // Used by react pdf to set number of pages on successfully loading the pdf.
+  handleLoadPdf = ({ numPages }) => {
+    console.log(numPages);
+    this.setState({ numPages: numPages, currentPdfPage: 1 });
+  };
+
+  // Used to change between first and last page of pdf.
+  handleChangePage = () => {
+    const newCurrentPage =
+      this.state.currentPdfPage !== 1 ? 1 : this.state.numPages;
+    this.setState({ currentPdfPage: newCurrentPage });
   };
 
   render() {
@@ -109,6 +163,7 @@ class App extends React.Component {
           <QueryForm
             onSubmit={this.handleQuerySubmit}
             onInput={this.handleQueryInput}
+            loading={this.state.loading}
           />
         </React.Fragment>
       );
@@ -118,7 +173,16 @@ class App extends React.Component {
         <Header />
         <Grid container spacing={2}>
           <Grid item sm={8}>
-            <LeftPane styles={styles} imgUri={this.state.imgUrl} />
+            <LeftPane
+              styles={styles}
+              imgBytes={this.state.imgBytes}
+              imgFormat={this.state.imgFormat}
+              imgUrl={this.state.imgUrl}
+              onLoadPdf={this.handleLoadPdf}
+              numPages={this.state.numPages}
+              currentPage={this.state.currentPdfPage}
+              OnChangePage={this.handleChangePage}
+            />
           </Grid>
           <Grid item sm>
             <RightPane
@@ -129,6 +193,8 @@ class App extends React.Component {
               onInput={this.handleInput}
               onDateInput={this.handleDateInput}
               onBlur={this.handleBlur}
+              onSkip={this.handleSkip}
+              loading={this.state.loading}
             />
           </Grid>
         </Grid>

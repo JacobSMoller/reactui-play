@@ -5,6 +5,9 @@ import StringField from "../stringField";
 import SelectField from "../selectField";
 import ReceiptForm from "../receiptForm";
 import InvoiceForm from "../invoiceForm";
+import SkipButton from "../skipButton";
+import CloudUploadIcon from "@material-ui/icons/CloudUploadOutlined";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const styles = {
   TextField: {
@@ -46,7 +49,6 @@ class RightPane extends React.Component {
   }
 
   render() {
-    console.log(this.props.values);
     const document_type = this.props.values.document_type;
     const country_code = this.props.values.supplier_country_code;
 
@@ -72,10 +74,21 @@ class RightPane extends React.Component {
             errorText={this.props.errormsgs["supplier_country_code"]}
           />
           {this.renderTextFields()}
-          <Button type="submit" fullWidth variant="contained" color="primary">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={this.props.loading}
+          >
+            {this.props.loading && (
+              <CircularProgress color="inherit" size={20} />
+            )}
             Annotate document
+            <CloudUploadIcon style={{ marginLeft: 5 }} />
           </Button>
         </form>
+        <SkipButton onSkip={this.props.onSkip} loading={this.props.loading} />
       </Paper>
     );
   }

@@ -28,7 +28,8 @@ function AmountField(props) {
       fullWidth
       helperText={errorText}
       error={error}
-      type="number"
+      type="Number"
+      inputProps={{ step: 0.01 }}
     />
   );
 }
