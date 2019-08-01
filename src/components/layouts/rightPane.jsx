@@ -9,16 +9,11 @@ import SkipButton from "../skipButton";
 import CloudUploadIcon from "@material-ui/icons/CloudUploadOutlined";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-const styles = {
-  TextField: {
-    padding: 4
-  }
-};
-
 const document_types = ["Receipt", "Invoice"];
 
 class RightPane extends React.Component {
   renderTextFields() {
+    console.log("RightPane Render Text Field", this.props.styles);
     const document_type = this.props.values.document_type;
     switch (document_type) {
       case "Receipt":
@@ -29,7 +24,8 @@ class RightPane extends React.Component {
             onInput={this.props.onInput}
             onBlur={this.props.onBlur}
             onDateInput={this.props.onDateInput}
-            styles={styles}
+            onMissing={this.props.onMissing}
+            styles={this.props.styles}
           />
         );
       case "Invoice":
@@ -40,7 +36,8 @@ class RightPane extends React.Component {
             onInput={this.props.onInput}
             onBlur={this.props.onBlur}
             onDateInput={this.props.onDateInput}
-            styles={styles}
+            onMissing={this.props.onMissing}
+            styles={this.props.styles}
           />
         );
       default:
@@ -49,15 +46,16 @@ class RightPane extends React.Component {
   }
 
   render() {
+    console.log("RightPane", this.props.styles);
     const document_type = this.props.values.document_type;
     const country_code = this.props.values.supplier_country_code;
-
+    console.log(this.props.values);
     return (
       <Paper style={this.props.styles.Paper}>
         <form onSubmit={this.props.onSubmit}>
           <SelectField
             key="document_type"
-            styles={styles}
+            styles={this.props.styles}
             label="document_type"
             value={document_type ? document_type : ""}
             onChange={this.props.onInput}
@@ -65,7 +63,7 @@ class RightPane extends React.Component {
           />
           <StringField
             key="supplier_country_code"
-            styles={styles}
+            styles={this.props.styles}
             label="supplier_country_code"
             value={country_code ? country_code : ""}
             onChange={this.props.onInput}

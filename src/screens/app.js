@@ -16,7 +16,20 @@ const styles = {
   Paper: {
     padding: 20,
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    overflow: "auto",
+    maxHeight: "895px"
+  },
+  LeftPaper: {
+    padding: 20,
+    marginTop: 10,
+    marginBottom: 10,
+    overflow: "auto",
+    maxHeight: "895px"
+  },
+  InputField: {
+    padding: 2,
+    width: "49%"
   }
 };
 
@@ -49,7 +62,7 @@ class App extends React.Component {
       loading: true
     });
     axios
-      .get("https://ac220a74.ngrok.io/documents", {
+      .get("https://1e947cd0.ngrok.io/documents", {
         params: {
           "country-code": this.state.queryCountry
         }
@@ -74,7 +87,7 @@ class App extends React.Component {
     const { name } = event.target;
     const values = { ...this.state.values };
     const errormsgs = { ...this.state.errormsgs };
-    values[name] = value;
+    values[name] = value === "" ? undefined : value;
     const valid = validate(values);
     if (valid) {
       errormsgs[name] = "";
@@ -113,7 +126,7 @@ class App extends React.Component {
     event.preventDefault();
     this.setState({ loading: true });
     axios
-      .get("https://ac220a74.ngrok.io/documents", {
+      .get("https://1e947cd0.ngrok.io/documents", {
         params: {
           "country-code": this.state.queryCountry
         }
@@ -123,7 +136,7 @@ class App extends React.Component {
           queried: true,
           imgBytes: res.data.image_bytes,
           imgFormat: res.data.image_format,
-          imgUrl: res.data.image_url,
+          imgUrl: res.data.httpUri,
           values: res.data.values,
           loading: false
         });
@@ -153,6 +166,13 @@ class App extends React.Component {
     const newCurrentPage =
       this.state.currentPdfPage !== 1 ? 1 : this.state.numPages;
     this.setState({ currentPdfPage: newCurrentPage });
+  };
+
+  handleMissing = name => {
+    const currentValues = { ...this.state.values };
+    console.log(currentValues);
+    currentValues[name] = null;
+    this.setState({ values: currentValues });
   };
 
   render() {
@@ -194,6 +214,7 @@ class App extends React.Component {
               onDateInput={this.handleDateInput}
               onBlur={this.handleBlur}
               onSkip={this.handleSkip}
+              onMissing={this.handleMissing}
               loading={this.state.loading}
             />
           </Grid>

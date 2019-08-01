@@ -3,6 +3,7 @@ import BaseForm from "./baseFormFields";
 import StringField from "./stringField";
 
 function ReceiptForm(props) {
+  console.log(props.styles, "ReceiptForm");
   return (
     <React.Fragment>
       <BaseForm
@@ -11,6 +12,7 @@ function ReceiptForm(props) {
         onInput={props.onInput}
         onBlur={props.onBlur}
         onDateInput={props.onDateInput}
+        onMissing={props.onMissing}
         errormsgs={props.errormsgs}
       />
       <StringField

@@ -15,13 +15,13 @@ function LeftPane(props) {
   switch (imgFormat) {
     case "pdf":
       return (
-        <Paper style={styles.Paper}>
+        <Paper style={styles.LeftPaper}>
           <center>
             <Document
               onLoadSuccess={props.onLoadPdf}
               file={`data:application/pdf;base64,${imgBytes}`}
             >
-              <Page pageNumber={props.currentPage} />
+              <Page scale={1.2} pageNumber={props.currentPage} />
             </Document>
             <p>
               Page {props.currentPage} of {props.numPages}
@@ -40,9 +40,12 @@ function LeftPane(props) {
       );
     default:
       return (
-        <Paper style={styles.Paper}>
+        <Paper style={styles.LeftPaper}>
           <Card>
-            <CardMedia component="img" src={imgUrl} />
+            <CardMedia
+              component="img"
+              src={`data:image/${imgFormat};base64,${imgBytes}`}
+            />
           </Card>
         </Paper>
       );

@@ -3,15 +3,15 @@ import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 
 const styles = {
-  TextField: {
-    padding: 4
+  SelectField: {
+    padding: 2
   }
 };
 
 function SelectField(props) {
   return (
     <TextField
-      style={styles.TextField}
+      style={styles.SelectField}
       key={props.label}
       id="outlined-name"
       label={props.label}

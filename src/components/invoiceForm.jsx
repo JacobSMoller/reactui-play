@@ -5,6 +5,7 @@ import BaseForm from "./baseFormFields";
 import CountryFields from "./countryFormFields";
 
 function InvoiceForm(props) {
+  console.log(props.styles, "InvoiceForm");
   return (
     <React.Fragment>
       <BaseForm
@@ -13,6 +14,7 @@ function InvoiceForm(props) {
         onInput={props.onInput}
         onBlur={props.onBlur}
         onDateInput={props.onDateInput}
+        onMissing={props.onMissing}
         errormsgs={props.errormsgs}
       />
       <DateField
@@ -21,6 +23,7 @@ function InvoiceForm(props) {
         styles={props.styles}
         disabled={false}
         onDateInput={props.onDateInput}
+        onMissing={props.onMissing}
         value={props.values.payment_due_date}
       />
       <StringField

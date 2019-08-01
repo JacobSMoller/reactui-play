@@ -4,6 +4,7 @@ import StringField from "./stringField";
 import DateField from "./dateField";
 
 function BaseForm(props) {
+  console.log("BaseForm", props.styles);
   return (
     <React.Fragment>
       <StringField
@@ -63,6 +64,7 @@ function BaseForm(props) {
         disabled={false}
         onDateInput={props.onDateInput}
         value={props.values.order_date}
+        onMissing={props.onMissing}
       />
     </React.Fragment>
   );
