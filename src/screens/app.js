@@ -43,15 +43,46 @@ class App extends React.Component {
       queried: false,
       loading: false,
       numPages: 0,
-      currentPdfPage: 1
+      currentPdfPage: 1,
+      documentsEndpoint: "https://7bf9d1a8.ngrok.io/documents"
     };
   }
   // Used by the submit form button in rightpane.
   handleSubmit = event => {
     event.preventDefault();
     this.setState({ loading: true });
-    // Send values to put endpoint.
-    this.setState({ loading: false });
+    axios
+      .post(this.state.documentsEndpoint, { ...this.state.values })
+      .then(res => {
+        this.setState({
+          values: {},
+          errormsgs: {}
+        });
+        // Get new document TODO get calls should be in a helper function
+        axios
+          .get(this.state.documentsEndpoint + "/" + this.state.queryCountry)
+          .then(res => {
+            this.setState({
+              imgBytes: res.data.image_content,
+              imgFormat: res.data.image_format,
+              values: res.data.values,
+              loading: false
+            });
+          })
+          .catch(error => {
+            console.log(error.response);
+          });
+      })
+      .catch(error => {
+        if (error.response.status === 400) {
+          this.setState({
+            loading: false,
+            errormsgs: error.response.data.err_msgs
+          });
+        } else {
+          console.log(error);
+        }
+      });
   };
 
   // Used by the skip button in rightpane.
@@ -62,27 +93,22 @@ class App extends React.Component {
       loading: true
     });
     axios
-      .get("https://1e947cd0.ngrok.io/documents", {
-        params: {
-          "country-code": this.state.queryCountry
-        }
-      })
+      .get(this.state.documentsEndpoint + "/" + this.state.queryCountry)
       .then(res => {
         this.setState({
-          imgBytes: res.data.image_bytes,
+          imgBytes: res.data.image_content,
           imgFormat: res.data.image_format,
-          imgUrl: res.data.image_url,
           values: res.data.values,
           loading: false
         });
       })
       .catch(error => {
-        console.log(error.response);
+        console.log(error);
       });
   };
 
-  // Used on all input fields to set state
-  handleInput = event => {
+  // Used on input fields to set state
+  handleFieldInput = event => {
     const { value } = event.target;
     const { name } = event.target;
     const values = { ...this.state.values };
@@ -126,17 +152,12 @@ class App extends React.Component {
     event.preventDefault();
     this.setState({ loading: true });
     axios
-      .get("https://1e947cd0.ngrok.io/documents", {
-        params: {
-          "country-code": this.state.queryCountry
-        }
-      })
+      .get(this.state.documentsEndpoint + "/" + this.state.queryCountry)
       .then(res => {
         this.setState({
           queried: true,
-          imgBytes: res.data.image_bytes,
+          imgBytes: res.data.image_content,
           imgFormat: res.data.image_format,
-          imgUrl: res.data.httpUri,
           values: res.data.values,
           loading: false
         });
@@ -157,7 +178,6 @@ class App extends React.Component {
 
   // Used by react pdf to set number of pages on successfully loading the pdf.
   handleLoadPdf = ({ numPages }) => {
-    console.log(numPages);
     this.setState({ numPages: numPages, currentPdfPage: 1 });
   };
 
@@ -170,7 +190,6 @@ class App extends React.Component {
 
   handleMissing = name => {
     const currentValues = { ...this.state.values };
-    console.log(currentValues);
     currentValues[name] = null;
     this.setState({ values: currentValues });
   };
@@ -197,7 +216,6 @@ class App extends React.Component {
               styles={styles}
               imgBytes={this.state.imgBytes}
               imgFormat={this.state.imgFormat}
-              imgUrl={this.state.imgUrl}
               onLoadPdf={this.handleLoadPdf}
               numPages={this.state.numPages}
               currentPage={this.state.currentPdfPage}
@@ -210,7 +228,7 @@ class App extends React.Component {
               values={this.state.values}
               errormsgs={this.state.errormsgs}
               onSubmit={this.handleSubmit}
-              onInput={this.handleInput}
+              onChange={this.handleFieldInput}
               onDateInput={this.handleDateInput}
               onBlur={this.handleBlur}
               onSkip={this.handleSkip}

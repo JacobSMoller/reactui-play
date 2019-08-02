@@ -10,8 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 }/pdf.worker.js`;
 
 function LeftPane(props) {
-  const { styles, imgFormat, imgBytes, imgUrl } = props;
-  console.log(imgUrl, imgFormat);
+  const { styles, imgFormat, imgBytes } = props;
   switch (imgFormat) {
     case "pdf":
       return (

@@ -4,7 +4,6 @@ import StringField from "./stringField";
 import DateField from "./dateField";
 
 function BaseForm(props) {
-  console.log("BaseForm", props.styles);
   return (
     <React.Fragment>
       <StringField
@@ -12,7 +11,7 @@ function BaseForm(props) {
         styles={props.styles}
         label="supplier_corporate_id"
         value={props.values.supplier_corporate_id}
-        onChange={props.onInput}
+        onChange={props.onChange}
         onBlur={props.onBlur}
         placeholder="VAT/ORG/MVA Number"
         errorText={props.errormsgs.supplier_corporate_id}
@@ -22,7 +21,7 @@ function BaseForm(props) {
         styles={props.styles}
         label="total_incl_vat"
         value={props.values.total_incl_vat}
-        onChange={props.onInput}
+        onChange={props.onChange}
         onBlur={props.onBlur}
         placeholder="Amount(format: 100.00)"
         errorText={props.errormsgs.total_incl_vat}
@@ -32,7 +31,7 @@ function BaseForm(props) {
         styles={props.styles}
         label="total_vat"
         value={props.values.total_vat}
-        onChange={props.onInput}
+        onChange={props.onChange}
         onBlur={props.onBlur}
         placeholder="Amount(format: 100.00)"
         errorText={props.errormsgs.total_vat}
@@ -42,7 +41,7 @@ function BaseForm(props) {
         styles={props.styles}
         label="total_excl_vat"
         value={props.values.total_excl_vat}
-        onChange={props.onInput}
+        onChange={props.onChange}
         onBlur={props.onBlur}
         placeholder="Amount(format: 100.00)"
         errorText={props.errormsgs.total_excl_vat}
@@ -52,7 +51,7 @@ function BaseForm(props) {
         styles={props.styles}
         label="currency"
         value={props.values.currency}
-        onChange={props.onInput}
+        onChange={props.onChange}
         onBlur={props.onBlur}
         placeholder="3 letter currency code (eg.: DKK)"
         errorText={props.errormsgs.currency}

@@ -46,7 +46,8 @@ export default function QueryForm(props) {
             placeholder="Country code (eg.: DK)"
             onInput={props.onInput}
             inputProps={{
-              maxLength: 2
+              maxLength: 2,
+              minLength: 2
             }}
           />
           <Button

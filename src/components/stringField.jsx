@@ -11,7 +11,7 @@ function StringField(props) {
       id="outlined-name"
       label={props.label}
       placeholder={props.placeholder ? props.placeholder : "Free input"}
-      defaultValue={props.value}
+      defaultValue={props.value ? props.value : null}
       margin="normal"
       variant="outlined"
       onChange={props.onChange}
@@ -19,6 +19,7 @@ function StringField(props) {
       name={props.label}
       helperText={errorText}
       error={error}
+      required={props.required ? props.required : false}
     />
   );
 }

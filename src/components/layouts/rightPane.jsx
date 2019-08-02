@@ -13,43 +13,78 @@ const document_types = ["Receipt", "Invoice"];
 
 class RightPane extends React.Component {
   renderTextFields() {
-    console.log("RightPane Render Text Field", this.props.styles);
     const document_type = this.props.values.document_type;
+    const country_code = this.props.values.supplier_country_code;
     switch (document_type) {
       case "Receipt":
         return (
-          <ReceiptForm
-            values={this.props.values}
-            errormsgs={this.props.errormsgs}
-            onInput={this.props.onInput}
-            onBlur={this.props.onBlur}
-            onDateInput={this.props.onDateInput}
-            onMissing={this.props.onMissing}
-            styles={this.props.styles}
-          />
+          <React.Fragment>
+            <StringField
+              key="supplier_country_code"
+              styles={this.props.styles}
+              label="supplier_country_code"
+              value={country_code ? country_code : ""}
+              onChange={this.props.onChange}
+              onBlur={this.props.onBlur}
+              placeholder="Format (alpha 2 country code eg.: DK)"
+              errorText={this.props.errormsgs.supplier_country_code}
+              required={true}
+            />
+            <ReceiptForm
+              values={this.props.values}
+              errormsgs={this.props.errormsgs}
+              onChange={this.props.onChange}
+              onBlur={this.props.onBlur}
+              onDateInput={this.props.onDateInput}
+              onMissing={this.props.onMissing}
+              styles={this.props.styles}
+            />
+          </React.Fragment>
         );
       case "Invoice":
         return (
-          <InvoiceForm
-            values={this.props.values}
-            errormsgs={this.props.errormsgs}
-            onInput={this.props.onInput}
-            onBlur={this.props.onBlur}
-            onDateInput={this.props.onDateInput}
-            onMissing={this.props.onMissing}
-            styles={this.props.styles}
-          />
+          <React.Fragment>
+            <StringField
+              key="supplier_country_code"
+              styles={this.props.styles}
+              label="supplier_country_code"
+              value={country_code ? country_code : ""}
+              onChange={this.props.onChange}
+              onBlur={this.props.onBlur}
+              placeholder="Format (alpha 2 country code eg.: DK)"
+              errorText={this.props.errormsgs.supplier_country_code}
+              required={true}
+            />
+            <InvoiceForm
+              values={this.props.values}
+              errormsgs={this.props.errormsgs}
+              onChange={this.props.onChange}
+              onBlur={this.props.onBlur}
+              onDateInput={this.props.onDateInput}
+              onMissing={this.props.onMissing}
+              styles={this.props.styles}
+            />
+          </React.Fragment>
         );
       default:
-        return null;
+        return (
+          <StringField
+            key="supplier_country_code"
+            styles={this.props.styles}
+            label="supplier_country_code"
+            value={country_code ? country_code : ""}
+            onChange={this.props.onChange}
+            onBlur={this.props.onBlur}
+            placeholder="Format (alpha 2 country code eg.: DK)"
+            errorText={this.props.errormsgs.supplier_country_code}
+            required={true}
+          />
+        );
     }
   }
 
   render() {
-    console.log("RightPane", this.props.styles);
     const document_type = this.props.values.document_type;
-    const country_code = this.props.values.supplier_country_code;
-    console.log(this.props.values);
     return (
       <Paper style={this.props.styles.Paper}>
         <form onSubmit={this.props.onSubmit}>
@@ -58,18 +93,8 @@ class RightPane extends React.Component {
             styles={this.props.styles}
             label="document_type"
             value={document_type ? document_type : ""}
-            onChange={this.props.onInput}
+            onChange={this.props.onChange}
             docTypes={document_types}
-          />
-          <StringField
-            key="supplier_country_code"
-            styles={this.props.styles}
-            label="supplier_country_code"
-            value={country_code ? country_code : ""}
-            onChange={this.props.onInput}
-            onBlur={this.props.onBlur}
-            placeholder="Format (alpha 2 country code eg.: DK)"
-            errorText={this.props.errormsgs["supplier_country_code"]}
           />
           {this.renderTextFields()}
           <Button
