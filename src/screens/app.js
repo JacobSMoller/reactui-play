@@ -44,7 +44,7 @@ class App extends React.Component {
       loading: false,
       numPages: 0,
       currentPdfPage: 1,
-      documentsEndpoint: "https://7bf9d1a8.ngrok.io/documents"
+      documentsEndpoint: "https://e05ce235.ngrok.io/documents"
     };
   }
   // Used by the submit form button in rightpane.
@@ -52,7 +52,10 @@ class App extends React.Component {
     event.preventDefault();
     this.setState({ loading: true });
     axios
-      .post(this.state.documentsEndpoint, { ...this.state.values })
+      .post(this.state.documentsEndpoint, {
+        values: { ...this.state.values },
+        img_metadata: this.state.imgMetadata
+      })
       .then(res => {
         this.setState({
           values: {},
@@ -63,8 +66,7 @@ class App extends React.Component {
           .get(this.state.documentsEndpoint + "/" + this.state.queryCountry)
           .then(res => {
             this.setState({
-              imgBytes: res.data.image_content,
-              imgFormat: res.data.image_format,
+              imgMetadata: res.data.img_metadata,
               values: res.data.values,
               loading: false
             });
@@ -96,8 +98,7 @@ class App extends React.Component {
       .get(this.state.documentsEndpoint + "/" + this.state.queryCountry)
       .then(res => {
         this.setState({
-          imgBytes: res.data.image_content,
-          imgFormat: res.data.image_format,
+          imgMetadata: res.data.img_metadata,
           values: res.data.values,
           loading: false
         });
@@ -156,14 +157,13 @@ class App extends React.Component {
       .then(res => {
         this.setState({
           queried: true,
-          imgBytes: res.data.image_content,
-          imgFormat: res.data.image_format,
+          imgMetadata: res.data.img_metadata,
           values: res.data.values,
           loading: false
         });
       })
       .catch(error => {
-        console.log(error.response);
+        console.log(error);
       });
   };
 
@@ -214,8 +214,8 @@ class App extends React.Component {
           <Grid item sm={8}>
             <LeftPane
               styles={styles}
-              imgBytes={this.state.imgBytes}
-              imgFormat={this.state.imgFormat}
+              imgBytes={this.state.imgMetadata.content}
+              imgFormat={this.state.imgMetadata.format}
               onLoadPdf={this.handleLoadPdf}
               numPages={this.state.numPages}
               currentPage={this.state.currentPdfPage}

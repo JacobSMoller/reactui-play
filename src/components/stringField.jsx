@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 function StringField(props) {
   const errorText = props.errorText;
@@ -11,7 +12,7 @@ function StringField(props) {
       id="outlined-name"
       label={props.label}
       placeholder={props.placeholder ? props.placeholder : "Free input"}
-      defaultValue={props.value ? props.value : null}
+      value={props.value ? props.value : null}
       margin="normal"
       variant="outlined"
       onChange={props.onChange}
